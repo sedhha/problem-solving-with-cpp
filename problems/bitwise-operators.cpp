@@ -53,6 +53,16 @@ bool divisibleByFour(int num) {
     bool againDivisibleByTwo = divisibleByTwo(afterDivisionWithTwo);
     return againDivisibleByTwo;
 }
+
+bool isOptimizedPowerOfFour(int num) {
+    if (num <= 0) return false;
+    
+    // Check if the number is a power of 2.
+    if ((num & (num - 1)) != 0) return false;
+    
+    // Check if '1' bit is in even position.
+    return (num & 0x55555555) == num;
+}
 int main()
 {
 #ifndef ONLINE_JUDGE
