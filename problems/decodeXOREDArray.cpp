@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 void printNum(int addr[], int size)
@@ -17,16 +18,16 @@ void printVector(vector<int> number)
     }
 }
 
-vector<int> getDecodedVector(vector<int> num, int first)
+vector<int> getDecodedVector(vector<int> encoded, int first)
 {
-    int size = num.size();
+    int size = encoded.size();
     vector<int> actual;
     actual.push_back(first);
-    for (int i = 1; i < size + 1; i++)
+    for (int i = 0; i < size; i++)
     {
-        cout<<first<<" XOR "<<num[i-1]<<endl;
-        actual.push_back(first ^ num[i - 1]);
-        first = num[i];
+        int xoredNum = first ^ encoded[i];
+        actual.push_back(xoredNum);
+        first = xoredNum;
     }
     return actual;
 }
