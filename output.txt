@@ -1,1 +1,1 @@
-Triplet Count = 12
+4
