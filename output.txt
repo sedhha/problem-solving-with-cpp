@@ -1,1 +1,1 @@
-Result = 6
+Min Distance = 85
