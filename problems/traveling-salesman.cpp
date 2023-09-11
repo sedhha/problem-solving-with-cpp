@@ -2,7 +2,7 @@
 #include <cmath>
 using namespace std;
 
-int shortestPath(vector<vector<int> > nums, int visited, int current)
+int shortestPath(vector<vector<int> > nums, int visited, int current, vector<vector<int> > &visitedRecord)
 {
     int size = nums.size();
     if (visited == (1 << size) - 1)
@@ -11,6 +11,8 @@ int shortestPath(vector<vector<int> > nums, int visited, int current)
         // return the distance of this city from Home
         return nums[current][0];
     }
+    if (visitedRecord[visited][current] != -1)
+        return visitedRecord[visited][current];
 
     int ans = INT_MAX;
     for (int cityChoice = 0; cityChoice < size; cityChoice++)
@@ -19,10 +21,11 @@ int shortestPath(vector<vector<int> > nums, int visited, int current)
         bool alreadyVisited = visited & cityToGoTo;
         if (!alreadyVisited)
         {
-            int distanceForSubSet = nums[current][cityChoice] + shortestPath(nums, visited | (1 << cityChoice), cityChoice);
+            int distanceForSubSet = nums[current][cityChoice] + shortestPath(nums, visited | (1 << cityChoice), cityChoice, visitedRecord);
             ans = min(ans, distanceForSubSet);
         }
     }
+    visitedRecord[visited][current] = ans;
     return ans;
 }
 
@@ -39,5 +42,6 @@ int main()
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
             cin >> nums[i][j];
-    cout << "Min Distance = " << shortestPath(nums, 1, 0) << endl;
+    vector<vector<int> > visitedRecord(1 << n, vector<int>(n, -1));
+    cout << "Min Distance = " << shortestPath(nums, 1, 0, visitedRecord) << endl;
 }
