@@ -2,19 +2,24 @@
 #include <vector>
 using namespace std;
 
-vector<int> decode(vector<int> encoded)
-{
-    int first = 1;
-    int size = encoded.size();
-    vector<int> result(size + 1, 0);
-    result[0] = first;
-
-    for (int i = 0; i < size; i++)
-    {
-        result[i + 1] = first ^ encoded[i];
-        first = result[i + 1];
+vector<int> decode(vector<int> encoded) {
+    int n = encoded.size() + 1;
+    int total_xor = 0, even_xor = 0;
+    for (int i = 1; i <= n; ++i) {
+        total_xor ^= i;
     }
-    return result;
+    for (int i = 1; i < n - 1; i += 2) {
+        even_xor ^= encoded[i];
+    }
+    
+    vector<int> perm(n, 0);
+    perm[0] = total_xor ^ even_xor;
+    
+    for (int i = 0; i < n - 1; ++i) {
+        perm[i + 1] = perm[i] ^ encoded[i];
+    }
+    
+    return perm;
 }
 
 void printVector(vector<int> result)
