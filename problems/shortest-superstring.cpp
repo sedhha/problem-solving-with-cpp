@@ -5,7 +5,7 @@
 using namespace std;
 
 /*
-    For every word, combine it with every other word 
+    For every word, combine it with every other word
     and memoize the result:
     abcd bcd cde bcda
     1    1   1   1
@@ -37,7 +37,7 @@ using namespace std;
     0011 => [cdebcda, bcdacde]
     0101 => [bcdabcd, bcda]
 
-    Combining Results: 
+    Combining Results:
 
     1110: [
         abcdabcde,
@@ -58,22 +58,34 @@ using namespace std;
 
 */
 
-string shortestSuperstring(vector<string> words)
+string maxOverlappingString(string s1, string s2)
 {
-    unordered_set<char> allWords;
-    string combinedWord, resultString;
-    for (int i = 0; i < words.size(); i++)
-        combinedWord += words[i];
-
-    for (int i = 0; i < combinedWord.size(); i++)
+    int s1Size = s1.size();
+    int s2Size = s2.size();
+    int s1Pointer = 0;
+    int s2Pointer = 0;
+    int pos = 0;
+    while (s1Pointer < s1Size && s2Pointer < s2Size)
     {
-        char key = combinedWord[i];
-        bool exists = allWords.count(key);
-        if (!exists)
-            resultString += key;
-        allWords.insert(key);
+        if (s1[s1Pointer] != s2[s2Pointer])
+        {
+            pos = 0;
+            s1Pointer++;
+        }
+        else if (s1[s1Pointer] == s2[s2Pointer])
+        {
+            pos = s2Pointer + 1;
+            s1Pointer++;
+            s2Pointer++;
+        }
     }
-    return resultString;
+    return s1 + s2.substr(pos, s2Size);
+}
+
+string shortestSuperString(vector<string> words, int current = 1)
+{
+    string shortest = "words";
+    return shortest;
 }
 
 int main()
@@ -93,7 +105,7 @@ int main()
         cin >> input;
         words[i] = input;
     }
-    cout << "Combined String = " << shortestSuperstring(words) << endl;
+    cout << "Combined String = " << shortestSuperString(words) << endl;
 
     return 0;
 }
