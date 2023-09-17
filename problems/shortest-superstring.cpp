@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <unordered_set>
+#include <unordered_map>
 using namespace std;
 
 /*
@@ -82,10 +82,77 @@ string maxOverlappingString(string s1, string s2)
     return s1 + s2.substr(pos, s2Size);
 }
 
-string shortestSuperString(vector<string> words, int current = 1)
+string computeSmallestSubStringFromSuperStrings(vector<string> words)
 {
-    string shortest = "words";
-    return shortest;
+    int size = words.size();
+    if (size == 0)
+        return "";
+    string smallest = words[0];
+    for (int i = 0; i < size; i++)
+    {
+        string curr = words[i];
+        if (curr.size() < smallest.size())
+            smallest = curr;
+    }
+    return smallest;
+}
+
+string joinAllWordsInVector(vector<string> words)
+{
+    string joinedWord = "";
+    for (int i = 0; i < words.size(); i++)
+    {
+        joinedWord += words[i];
+    }
+    return joinedWord;
+}
+
+string recursivelyFindWords(vector<string> words,
+                            string currentWord,
+                            int pos,
+                            int lastPos,
+                            unordered_map<int, vector<string>> map)
+{
+    if (pos == lastPos)
+        return computeSmallestSubStringFromSuperStrings(map[lastPos]);
+
+    string result = joinAllWordsInVector(words);
+    for (int i = 0; i < words.size(); i++)
+    {
+        string superString = maxOverlappingString(currentWord, words[i]);
+        int currKey = pos | (1 << i);
+        map[currKey].push_back(superString);
+        string nthResult = recursivelyFindWords(
+            words,
+            superString,
+            currKey,
+            lastPos,
+            map);
+        if (result.size() > nthResult.size())
+            result = nthResult;
+    }
+    return result;
+}
+
+string shortestSuperString(vector<string> words)
+{
+    int size = words.size();
+    if (size == 0)
+        return "";
+    if (size == 1)
+        return words[0];
+
+    int lastPos = (1 << size) - 1;
+    string result = joinAllWordsInVector(words);
+    unordered_map<int, vector<string>> map;
+    for (int i = 0; i < size; i++)
+    {
+        int currPos = 1 << (i + 1);
+        string nthResult = recursivelyFindWords(words, words[i], currPos, lastPos, map);
+        if (result.size() > nthResult.size())
+            result = nthResult;
+    }
+    return result;
 }
 
 int main()

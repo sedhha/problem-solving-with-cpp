@@ -1,1 +1,1 @@
-Max overlapping string = abcdbcxd
+2
