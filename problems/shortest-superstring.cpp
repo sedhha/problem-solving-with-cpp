@@ -113,6 +113,7 @@ string recursivelyFindWords(vector<string> words,
                             int lastPos,
                             unordered_map<int, vector<string>> map)
 {
+    cout << pos << " " << lastPos << endl;
     if (pos == lastPos)
         return computeSmallestSubStringFromSuperStrings(map[lastPos]);
 
@@ -164,13 +165,11 @@ int main()
 #endif
     int n;
     cin >> n;
-    vector<string> words(n);
+    vector<string> words(n, "");
     cout << n << endl;
     for (int i = 0; i < n; i++)
     {
-        string input;
-        cin >> input;
-        words[i] = input;
+        cin >> words[i];
     }
     cout << "Combined String = " << shortestSuperString(words) << endl;
 
