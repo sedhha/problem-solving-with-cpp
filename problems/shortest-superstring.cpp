@@ -1,64 +1,17 @@
 #include <iostream>
-#include <string>
 #include <vector>
+#include <string>
 #include <unordered_map>
 using namespace std;
 
-/*
-    For every word, combine it with every other word
-    and memoize the result:
-    abcd bcd cde bcda
-    1    1   1   1
-    For abcd:
-    with bcd: 1100 => [abcd, ]
-    with cde: 1010 => [abcde, ]
-    with bcda: 1001 => [abcda, ]
+void printVector(vector<string> words)
+{
+    for (int i = 0; i < words.size(); i++)
+        cout << words[i] << " ";
+    cout << endl;
+}
 
-    For bcd:
-    with abcd: 1100 => [abcd, bcdabcd, ]
-    with cde: 0110 => [bcde]
-    with bcda: 0101 => [bcda]
-
-    For cde:
-    with abcd: 1010 => [abcde, cdeabcd, ]
-    with bcd: 0110 => [bcde, cdebcd]
-    with bcda: 0011 => [cdebcda]
-
-    For bcda:
-    with abcd: 1001 => [abcda, bcdabcd],
-    with bcd: 0101 => [bcdabcd, bcda]
-    with cde: 0011 => [cdebcda, bcdacde]
-
-    Combining:
-    1100 => [abcd, bcdabcd, ]
-    1010 => [abcde, cdeabcd, ]
-    1001 => [abcda, bcdabcd, ]
-    0110 => [bcde, cdebcd]
-    0011 => [cdebcda, bcdacde]
-    0101 => [bcdabcd, bcda]
-
-    Combining Results:
-
-    1110: [
-        abcdabcde,
-        abcdcdeabcd,
-        bcdabcdabcde,
-        bcdabcdeabcd
-    ],
-    1101: [
-        abcdabcda,
-        bcdabcdabcda,
-
-    ]
-
-    // Two for loops:
-    Generate first set of possibilities
-
-
-
-*/
-
-string maxOverlappingString(string s1, string s2)
+string overlappingWord(string s1, string s2)
 {
     int s1Size = s1.size();
     int s2Size = s2.size();
@@ -71,6 +24,7 @@ string maxOverlappingString(string s1, string s2)
         {
             pos = 0;
             s1Pointer++;
+            s2Pointer = 0;
         }
         else if (s1[s1Pointer] == s2[s2Pointer])
         {
@@ -81,79 +35,68 @@ string maxOverlappingString(string s1, string s2)
     }
     return s1 + s2.substr(pos, s2Size);
 }
+bool isIthIndexVisited(int currentState, int i)
+{
+    int shiftedNumber = (1 << i);
+    int result = currentState & shiftedNumber;
+    return result != 0;
+}
 
-string computeSmallestSubStringFromSuperStrings(vector<string> words)
+string shortestStringInGivenVector(vector<string> words)
 {
     int size = words.size();
     if (size == 0)
         return "";
-    string smallest = words[0];
+    string shortest = words[0];
+    for (int i = 1; i < size; i++)
+        if (words[i].size() < shortest.size())
+            shortest = words[i];
+    return shortest;
+}
+void generateComboForGivenWord(
+    string currentWord,
+    vector<string> words,
+    int vectorSize,
+    int finalState,
+    int coveredState,
+    vector<string> &mergedWords)
+{
+    if (coveredState >= finalState)
+    {
+        mergedWords.push_back(currentWord);
+        return;
+    }
+    for (int i = 0; i < vectorSize; i++)
+    {
+        bool isNodeVisited = isIthIndexVisited(coveredState, i);
+        if (!isNodeVisited)
+        {
+            string superstring = overlappingWord(currentWord, words[i]);
+            int newState = coveredState | (1 << i);
+            generateComboForGivenWord(superstring, words, vectorSize, finalState, newState, mergedWords);
+        }
+    }
+    return;
+}
+string shortestSuperstring(
+    vector<string> words)
+{
+    int size = words.size();
+    int finalState = (1 << size) - 1;
+    vector<string> mergedWords;
     for (int i = 0; i < size; i++)
     {
-        string curr = words[i];
-        if (curr.size() < smallest.size())
-            smallest = curr;
-    }
-    return smallest;
-}
-
-string joinAllWordsInVector(vector<string> words)
-{
-    string joinedWord = "";
-    for (int i = 0; i < words.size(); i++)
-    {
-        joinedWord += words[i];
-    }
-    return joinedWord;
-}
-
-string recursivelyFindWords(vector<string> words,
-                            string currentWord,
-                            int pos,
-                            int lastPos,
-                            unordered_map<int, vector<string>> map)
-{
-    cout << pos << " " << lastPos << endl;
-    if (pos == lastPos)
-        return computeSmallestSubStringFromSuperStrings(map[lastPos]);
-
-    string result = joinAllWordsInVector(words);
-    for (int i = 0; i < words.size(); i++)
-    {
-        string superString = maxOverlappingString(currentWord, words[i]);
-        int currKey = pos | (1 << i);
-        map[currKey].push_back(superString);
-        string nthResult = recursivelyFindWords(
+        string currentWord = words[i];
+        generateComboForGivenWord(
+            currentWord,
             words,
-            superString,
-            currKey,
-            lastPos,
-            map);
-        if (result.size() > nthResult.size())
-            result = nthResult;
+            size,
+            finalState,
+            1 << i,
+            mergedWords);
     }
-    return result;
-}
-
-string shortestSuperString(vector<string> words)
-{
-    int size = words.size();
-    if (size == 0)
-        return "";
-    if (size == 1)
-        return words[0];
-
-    int lastPos = (1 << size) - 1;
-    string result = joinAllWordsInVector(words);
-    unordered_map<int, vector<string>> map;
-    for (int i = 0; i < size; i++)
-    {
-        int currPos = 1 << (i + 1);
-        string nthResult = recursivelyFindWords(words, words[i], currPos, lastPos, map);
-        if (result.size() > nthResult.size())
-            result = nthResult;
-    }
-    return result;
+    string shortestCombination = shortestStringInGivenVector(mergedWords);
+    return shortestCombination;
 }
 
 int main()
@@ -165,13 +108,16 @@ int main()
 #endif
     int n;
     cin >> n;
-    vector<string> words(n, "");
-    cout << n << endl;
-    for (int i = 0; i < n; i++)
-    {
-        cin >> words[i];
-    }
-    cout << "Combined String = " << shortestSuperString(words) << endl;
 
+    vector<string> words(n, "");
+    for (int i = 0; i < n; i++)
+        cin >> words[i];
+
+    string result = shortestSuperstring(words);
+    cout << result << endl;
+    // vector<string> mergedWords;
+    // generateComboForGivenWord("gcta", words, words.size(), ((n << 1) - 1), 1, mergedWords);
+    // printVector(mergedWords);
+    // cout << overlappingWord("abc", "bxadef");
     return 0;
 }
