@@ -69,8 +69,6 @@ void generateComboForGivenWord(
     for (int i = 0; i < vectorSize; i++)
     {
         bool isNodeVisited = isIthIndexVisited(coveredState, i);
-        if (words[i] == "ttca")
-            cout << currentWord + " " << isNodeVisited << " " << coveredState << " " << i << endl;
         if (!isNodeVisited)
         {
             string superstring = overlappingWord(currentWord, words[i]);
@@ -115,11 +113,11 @@ int main()
     for (int i = 0; i < n; i++)
         cin >> words[i];
 
-    // string result = shortestSuperstring(words);
-    // cout << result << endl;
-    vector<string> mergedWords;
-    generateComboForGivenWord("gcta", words, words.size(), ((n << 1) - 1), 1, mergedWords);
-    printVector(mergedWords);
+    string result = shortestSuperstring(words);
+    cout << result << endl;
+    // vector<string> mergedWords;
+    // generateComboForGivenWord("gcta", words, words.size(), ((n << 1) - 1), 1, mergedWords);
+    // printVector(mergedWords);
     // cout << overlappingWord("abc", "bxadef");
     return 0;
 }
