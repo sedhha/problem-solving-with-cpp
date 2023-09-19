@@ -7,3 +7,4 @@ Added Encoded Permutations, however the code is failing so would be updating cha
 Need to work on permutations problem. Its still pending updates.
 
 Unknown programmes not pushed
+Need to run new test cases
