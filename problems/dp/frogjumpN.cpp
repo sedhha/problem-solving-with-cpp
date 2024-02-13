@@ -32,6 +32,6 @@ int main()
     for (int i = 0; i < n; i++)
         cin >> input[i];
     vector<int> dp(n + 1, -1);
-    cout << "Result: " << f(n, input, dp, k) << endl;
+    cout << "Result: " << f(n - 1, input, dp, k) << endl;
     return 0;
 }
