@@ -1,1 +1,1 @@
-Triplet Count = 216
+6

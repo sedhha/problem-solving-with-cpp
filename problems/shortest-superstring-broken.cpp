@@ -103,7 +103,7 @@ int main()
 {
 #ifndef ONLINE_JUDGE
     freopen("../input.txt", "r", stdin);
-    freopen("../ouput.txt", "w", stdout);
+    freopen("../output.txt", "w", stdout);
 
 #endif
     int n;
