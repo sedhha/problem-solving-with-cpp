@@ -1,15 +1,5 @@
-Using Recursion: 24
-Using tabulation: 24
-Using pick-notpick algorithm: 24
-Using Recursion: 6
-Using tabulation: 6
-Using pick-notpick algorithm: 6
-Using Recursion: 2
-Using tabulation: 2
-Using pick-notpick algorithm: 2
-Using Recursion: 11
-Using tabulation: 11
-Using pick-notpick algorithm: 11
-Using Recursion: 5
-Using tabulation: 5
-Using pick-notpick algorithm: 5
+Result: 21
+Result: 6
+Result: 2
+Result: 10
+Result: 4
