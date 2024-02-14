@@ -42,7 +42,40 @@ using namespace std;
     Max Sum when tabulation: 6
     Max Sum: 2
     Max Sum when tabulation: 2
+    ---------------------------------------------------------
+    APPROACH 2: (PICK OR NOT PICK)
+    1 2 4
+    f(N) =>
+            if(N == 0) return V[N];
+            case pick:
+                int currSum = v[N]; // 4
+                if(N-2 >= 0)
+                    currSum += f(N - 2); // 6
+                // 2
+            case notPick:
+                int currSum = INT_MIN;
+                if(N-1 >= 0)
+                    currSum =  f(N - 1); // f(1) = 2
+            maxSum = max(pick, notPick); // 6
+            return dp[N] = maxSum; [-1, 2, 6]
+
+
 */
+
+int fPickNotPick(int n, vector<int> v, vector<int> &dp)
+{
+    if (n == 0)
+        return v[0];
+
+    int pick = v[n];
+    if (n - 2 >= 0)
+        pick += fPickNotPick(n - 2, v, dp);
+    int notPick = INT_MIN;
+    if (n - 1 >= 0)
+        notPick = fPickNotPick(n - 1, v, dp);
+    int maxValue = max(pick, notPick);
+    return dp[n] = maxValue;
+}
 
 int f(int n, vector<int> v, vector<int> &dp)
 {
@@ -109,8 +142,10 @@ int main()
         for (int i = 0; i < n; i++)
             cin >> nums[i];
         vector<int> dp(n, -1);
-        cout << "Max Sum: " << f(n - 1, nums, dp) << endl;
-        cout << "Max Sum when tabulation: " << fTabulation(n - 1, nums) << endl;
+        cout << "Using Recursion: " << f(n - 1, nums, dp) << endl;
+        cout << "Using tabulation: " << fTabulation(n - 1, nums) << endl;
+        vector<int> dpPickNotPick(n, -1);
+        cout << "Using pick-notpick algorithm: " << fPickNotPick(n - 1, nums, dpPickNotPick) << endl;
     }
 
     return 0;
