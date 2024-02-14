@@ -1,2 +1,1 @@
-Result: 20
-Result fTab: 20
+Max Sum: 16
