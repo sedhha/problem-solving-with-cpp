@@ -26,6 +26,22 @@ using namespace std;
     // f(1) = 2;
     // f(2) = 4;
 
+    INPUT:
+    3
+    6
+    10 4 6 4 5 8
+    4
+    1 2 3 4
+    2
+    1 2
+
+    OUTPUT:
+    Max Sum: 24
+    Max Sum when tabulation: 24
+    Max Sum: 6
+    Max Sum when tabulation: 6
+    Max Sum: 2
+    Max Sum when tabulation: 2
 */
 
 int f(int n, vector<int> v, vector<int> &dp)
@@ -44,20 +60,58 @@ int f(int n, vector<int> v, vector<int> &dp)
     return dp[n] = maxSum;
 }
 
+int fTabulation(int n, vector<int> v)
+{
+    vector<int> dp(n, -1);
+    if (n == 0)
+        return 0;
+    dp[0] = v[0];
+    for (int i = 0; i <= n; i++)
+    {
+        int maxSum = INT_MIN;
+        for (int j = 0; j <= i; j++) // 0 1 2 3 (3)
+        {
+            int currSum = v[i]; // 4
+            if (j - 2 >= 0)
+                currSum += dp[j - 2]; // 14
+            maxSum = max(currSum, maxSum);
+        }
+        dp[i] = maxSum; // dp[0] = 0,
+        // dp[1] = 4, dp[2] = 16
+        //
+    }
+    return dp[n];
+}
+void printVector(vector<int> nums)
+{
+    for (int i = 0; i < nums.size(); i++)
+    {
+        cout << nums[i] << " ";
+    }
+    cout << endl;
+}
+
 int main()
 {
 #ifndef ONLINE_JUDGE
     freopen("./io/input.txt", "r", stdin);
     freopen("./io/output.txt", "w", stdout);
 #endif
-    int n;
-    cin >> n;
 
-    vector<int> nums(n);
-    for (int i = 0; i < n; i++)
-        cin >> nums[i];
-    vector<int> dp(n, -1);
-    cout << "Max Sum: " << f(n - 1, nums, dp) << endl;
+    int numOfInputs;
+    cin >> numOfInputs;
+    for (int i = 0; i < numOfInputs; i++)
+    {
+        int n;
+        cin >> n;
+
+        vector<int> nums(n);
+        for (int i = 0; i < n; i++)
+            cin >> nums[i];
+        vector<int> dp(n, -1);
+        cout << "Max Sum: " << f(n - 1, nums, dp) << endl;
+        cout << "Max Sum when tabulation: " << fTabulation(n - 1, nums) << endl;
+    }
 
     return 0;
 }

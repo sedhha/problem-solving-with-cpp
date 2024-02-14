@@ -1,1 +1,6 @@
 Max Sum: 24
+Max Sum when tabulation: 24
+Max Sum: 6
+Max Sum when tabulation: 6
+Max Sum: 2
+Max Sum when tabulation: 2
