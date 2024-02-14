@@ -1,1 +1,1 @@
-Max Sum: 16
+Max Sum: 24
